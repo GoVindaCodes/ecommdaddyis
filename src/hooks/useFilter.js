@@ -360,7 +360,7 @@ const useFilter = (data) => {
     //     cur.iso_code.toLowerCase().includes(currency.toLowerCase())
     //   );
     // }
-
+    // console.log("services : ", services)
     return services;
   }, [
     time,
@@ -387,19 +387,193 @@ const useFilter = (data) => {
   //pagination functionality start
   const resultsPerPage = 10;
   const totalResults = serviceData?.length;
+  console.log("hi from filters : ", totalResults)
   const handleChangePage = (p) => {
     // console.log('Changing page to:', p);
     setCurrentPage(p);
   };
-  useEffect(() => {
-    setDataTable(
-      serviceData?.slice(
-        (currentPage - 1) * resultsPerPage,
-        currentPage * resultsPerPage
-      )
-    );
-  }, [serviceData, currentPage, resultsPerPage]);
+  // original Logics
+
+  // useEffect(() => {
+  //   setDataTable(
+  //     serviceData?.slice(
+  //       (currentPage - 1) * resultsPerPage,
+  //       currentPage * resultsPerPage
+  //     )
+  //   );
+  // }, [serviceData, currentPage, resultsPerPage]);
+
   //pagination functionality end
+
+  // useEffect(() => {
+  //   let slicedData;
+  //   if (serviceData?.length > 0 && !searchText) { // Only slice when not searching
+  //     const startIndex = (currentPage - 1) * resultsPerPage;
+  //     const endIndex = Math.min(currentPage * resultsPerPage, serviceData.length);
+  //     slicedData = serviceData.slice(startIndex, endIndex);
+  //   } else {
+  //     slicedData = serviceData; // Keep the data as is if it's empty or when searching
+  //   }
+  //   setDataTable(slicedData);
+  // }, [serviceData, currentPage, resultsPerPage, searchText]);
+
+  // working logic with searching and reflectings in the datatables
+
+  // useEffect(() => {
+  //   let slicedData;
+  //   if (serviceData?.length > 0) {
+  //     const startIndex = (currentPage - 1) * resultsPerPage;
+  //     const endIndex = Math.min(currentPage * resultsPerPage, serviceData.length);
+  //     slicedData = serviceData.slice(startIndex, endIndex);
+  //   } else {
+  //     slicedData = serviceData;
+  //   }
+  //   const filtersActive =
+  //     filter ||
+  //     sortedField ||
+  //     attributeTitle ||
+  //     categoryType ||
+  //     role ||
+  //     searchUser ||
+  //     searchCoupon ||
+  //     status ||
+  //     searchOrder ||
+  //     country ||
+  //     shipping ||
+  //     language ||
+  //     currency;
+
+  //   if (filtersActive || searchText) {
+  //     setDataTable(serviceData);
+  //   } else {
+  //     setDataTable(slicedData);
+  //   }
+  // }, [
+  //   serviceData,
+  //   currentPage,
+  //   resultsPerPage,
+  //   filter,
+  //   sortedField,
+  //   searchText,
+  //   attributeTitle,
+  //   categoryType,
+  //   role,
+  //   searchUser,
+  //   searchCoupon,
+  //   status,
+  //   searchOrder,
+  //   country,
+  //   shipping,
+  //   language,
+  //   currency,
+  // ]);
+
+  // useEffect(() => {
+  //   let slicedData;
+  //   if (serviceData?.length > 0) {
+  //     const startIndex = (currentPage - 1) * resultsPerPage;
+  //     const endIndex = Math.min(currentPage * resultsPerPage, serviceData.length);
+  //     slicedData = serviceData.slice(startIndex, endIndex);
+  //   } else {
+  //     slicedData = serviceData;
+  //   }
+  //   const filtersActive =
+  //     filter ||
+  //     sortedField ||
+  //     attributeTitle ||
+  //     categoryType ||
+  //     role ||
+  //     searchUser ||
+  //     searchCoupon ||
+  //     status ||
+  //     searchOrder ||
+  //     country ||
+  //     shipping ||
+  //     language ||
+  //     currency;
+
+  //   if (filtersActive || searchText) {
+  //     setDataTable(serviceData);
+  //     setCurrentPage(1); // Set currentPage to 1 when filters or searchText change
+  //   } else {
+  //     setDataTable(slicedData);
+  //   }
+  // }, [
+  //   serviceData,
+  //   currentPage,
+  //   resultsPerPage,
+  //   filter,
+  //   sortedField,
+  //   searchText,
+  //   attributeTitle,
+  //   categoryType,
+  //   role,
+  //   searchUser,
+  //   searchCoupon,
+  //   status,
+  //   searchOrder,
+  //   country,
+  //   shipping,
+  //   language,
+  //   currency,
+  // ]);
+
+
+  useEffect(() => {
+    let slicedData;
+    if (serviceData?.length > 0) {
+      const startIndex = (currentPage - 1) * resultsPerPage;
+      const endIndex = Math.min(currentPage * resultsPerPage, serviceData.length);
+      slicedData = serviceData.slice(startIndex, endIndex);
+    } else {
+      slicedData = serviceData;
+    }
+    const filtersActive =
+      filter ||
+      sortedField ||
+      attributeTitle ||
+      categoryType ||
+      role ||
+      searchUser ||
+      searchCoupon ||
+      status ||
+      searchOrder ||
+      country ||
+      shipping ||
+      language ||
+      currency;
+
+    if (filtersActive || searchText) {
+      setDataTable(slicedData); // Set dataTable to slicedData
+      setCurrentPage(1); // Set currentPage to 1 when filters or searchText change
+    } else {
+      setDataTable(slicedData);
+    }
+  }, [
+    serviceData,
+    currentPage,
+    resultsPerPage,
+    filter,
+    sortedField,
+    searchText,
+    attributeTitle,
+    categoryType,
+    role,
+    searchUser,
+    searchCoupon,
+    status,
+    searchOrder,
+    country,
+    shipping,
+    language,
+    currency,
+  ]);
+
+  // Update currentPage state when searchText changes
+  useEffect(() => {
+    setCurrentPage(1); // Set currentPage to 1 when searchText changes
+  }, [searchText]);
+
   //table form submit function for search start
   const handleSubmitForAll = (e) => {
     console.log("hi: ", searchRef.current.value)

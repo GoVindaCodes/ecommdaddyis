@@ -9,7 +9,7 @@ const SelectLanguageTwo = ({ handleSelectLanguage, register }) => {
   );
   const { lang } = useContext(SidebarContext);
 
-  // console.log("lang", lang, "data", data);
+  console.log("lang", lang, "data", data);
 
   return (
     <>
